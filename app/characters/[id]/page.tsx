@@ -1,4 +1,6 @@
-export const dynamic = 'force-dynamic'; // ensures fresh server fetch
+export const dynamic = 'force-dynamic';
+
+import { headers } from 'next/headers';
 
 type Character = {
   id: number;
@@ -10,17 +12,22 @@ type Character = {
 };
 
 type Props = {
-  params: Promise<{ id: string }>; // params is now a Promise in Next.js 14
+  params: Promise<{ id: string }>;
 };
 
 export default async function CharacterPage({ params }: Props) {
-  // unwrap the params promise
   const p = await params;
   const id = p.id;
 
-  // fetch character data from your backend API
-  const res = await fetch(`/api/characters/${id}`, { cache: 'no-store' })
+  const h = await headers();
+  const host = h.get('host');
+  const protocol =
+    process.env.NODE_ENV === 'development' ? 'http' : 'https';
 
+  const res = await fetch(
+    `${protocol}://${host}/api/characters/${id}`,
+    { cache: 'no-store' }
+  );
 
   const character: Character = await res.json();
 

@@ -19,8 +19,9 @@ export default async function CharacterPage({ params }: Props) {
   const p = await params;
   const id = p.id;
 
-  const h = headers();
+  const h = await headers();
   const host = h.get('host');
+
   const protocol =
     process.env.NODE_ENV === 'development' ? 'http' : 'https';
 
