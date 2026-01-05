@@ -6,12 +6,13 @@ type Character = {
   image: string;
 };
 
-export default async function CharactersPage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
-  const page = searchParams.page ?? '1';
+type Props = {
+  searchParams: Promise<{ page?: string }>;
+};
+
+export default async function CharactersPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const page = params.page ?? '1';
 
   const res = await fetch(
     `https://rickandmortyapi.com/api/character?page=${page}`,

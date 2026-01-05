@@ -8,13 +8,16 @@ type Character = {
   gender: string;
 };
 
-export default async function CharacterPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function CharacterPage({ params }: Props) {
+  const p = await params;
+  const id = p.id;
+
   const res = await fetch(
-    `https://rickandmortyapi.com/api/character/${params.id}`,
+    `https://rickandmortyapi.com/api/character/${id}`,
     { cache: 'no-store' }
   );
 
