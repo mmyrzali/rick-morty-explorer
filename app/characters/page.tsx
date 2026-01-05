@@ -6,23 +6,15 @@ type Character = {
   image: string;
 };
 
-function getBaseUrl() {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  return 'http://localhost:3000';
-}
-
 export default async function CharactersPage({
   searchParams,
 }: {
   searchParams: { page?: string };
 }) {
   const page = searchParams.page ?? '1';
-  const baseUrl = getBaseUrl();
 
   const res = await fetch(
-    `${baseUrl}/api/characters?page=${page}`,
+    `https://rickandmortyapi.com/api/character?page=${page}`,
     { cache: 'no-store' }
   );
 

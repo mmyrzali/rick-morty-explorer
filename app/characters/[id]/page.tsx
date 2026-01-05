@@ -8,22 +8,13 @@ type Character = {
   gender: string;
 };
 
-function getBaseUrl() {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  return 'http://localhost:3000';
-}
-
 export default async function CharacterPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const baseUrl = getBaseUrl();
-
   const res = await fetch(
-    `${baseUrl}/api/characters/${params.id}`,
+    `https://rickandmortyapi.com/api/character/${params.id}`,
     { cache: 'no-store' }
   );
 
