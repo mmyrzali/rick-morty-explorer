@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rick and Morty Explorer
 
-## Getting Started
+A web application that allows users to search and browse characters from the animated series **Rick and Morty**.  
+The app uses a custom backend to fetch data from the public Rick and Morty API and presents it in a paginated UI.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Character list with images
+- Pagination
+- Character detail pages
+- Custom backend API (server-side only)
+- Dynamic routing
+- Deployed web application
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js**
+- **TypeScript**
+- **Node.js**
+- **Rick and Morty API**
+- **Vercel**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation & Running Locally
 
-## Learn More
+1. Clone the repository:
+  git clone https://github.com/mmyrzali/rick-morty-explorer.git
+  cd rick-morty-explorer
+2. Install the dependencies:
+   npm install
+3. Run the development server:
+   npm run dev
+4. Open in browser:
+   http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+## Design & Development Process
+   The application was built using Next.js App Router with a separation between frontend and backend.
+Frontend pages fetch data only from internal API routes.
+Backend API routes handle all communication with the external Rick and Morty API.
+Dynamic routing is used for pagination and character detail pages.
+Server-side rendering ensures fast load times and SEO-friendly pages.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Backend Architecture
+  All external API calls are handled server-side:
+/api/characters?page=1 → paginated list
+/api/characters/[id] → single character details
+This approach improves security and follows best practices.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Trade-offs & Decisions
+  Chose Next.js to combine frontend and backend in one project.
+Used server components instead of client state for simplicity.
+Styling is minimal to focus on functionality and architecture.
+No UI framework was used to keep the project lightweight.
 
-## Deploy on Vercel
+## Known Issues / Limitations
+  No search or filtering (pagination only)
+Basic styling
+Error handling could be improved for network failures
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+ The project was deployed at Vercel. 
+ https://rick-morty-explorer-96bvyy66k-madinas-projects-fb598f80.vercel.app
