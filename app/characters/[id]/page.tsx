@@ -19,10 +19,8 @@ export default async function CharacterPage({ params }: Props) {
   const id = p.id;
 
   // fetch character data from your backend API
-  const res = await fetch(
-    `http://localhost:3000/api/characters/${id}`,
-    { cache: 'no-store' }
-  );
+  const res = await fetch(`/api/characters/${id}`, { cache: 'no-store' })
+
 
   const character: Character = await res.json();
 

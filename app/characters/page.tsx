@@ -14,10 +14,7 @@ export default async function CharactersPage({ searchParams }: Props) {
   const params = await searchParams;
   const page = params.page ?? '1';
 
-  const res = await fetch(
-    `http://localhost:3000/api/characters?page=${page}`,
-    { cache: 'no-store' }
-  );
+  const res = await fetch(`/api/characters?page=${page}`, { cache: 'no-store' });
 
   const data = await res.json();
 
