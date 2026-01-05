@@ -1,57 +1,53 @@
 export const dynamic = 'force-dynamic';
 
+import { headers } from 'next/headers';
+
 type Character = {
   id: number;
   name: string;
   image: string;
+  status: string;
+  species: string;
+  gender: string;
 };
 
 type Props = {
-  searchParams: Promise<{ page?: string }>;
+  params: Promise<{ id: string }>;
 };
 
-export default async function CharactersPage({ searchParams }: Props) {
-  const params = await searchParams;
-  const page = params.page ?? '1';
+export default async function CharacterPage({ params }: Props) {
+  const p = await params;
+  const id = p.id;
 
-  const res = await fetch(`/api/characters?page=${page}`, { cache: 'no-store' });
+  const h = headers();
+  const host = h.get('host');
+  const protocol =
+    process.env.NODE_ENV === 'development' ? 'http' : 'https';
 
-  const data = await res.json();
+  const res = await fetch(
+    `${protocol}://${host}/api/characters/${id}`,
+    { cache: 'no-store' }
+  );
+
+  const character: Character = await res.json();
 
   return (
     <main style={{ padding: 20 }}>
-      <h1>Characters (Page {page})</h1>
+      <h1>{character.name}</h1>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-         
-        {data.results.map((character: Character) => (
-  <a
-    key={character.id}
-    href={`/characters/${character.id}`}
-    style={{ textDecoration: 'none', color: 'inherit' }}
-  >
-    <div style={{ width: 150, cursor: 'pointer' }}>
       <img
         src={character.image}
         alt={character.name}
-        style={{ width: '100%', borderRadius: 8 }}
+        style={{ width: 300, borderRadius: 12 }}
       />
-      <p>{character.name}</p>
-    </div>
-  </a>
-  ))}
 
-      </div>
+      <ul>
+        <li>Status: {character.status}</li>
+        <li>Species: {character.species}</li>
+        <li>Gender: {character.gender}</li>
+      </ul>
 
-      <div style={{ marginTop: 20 }}>
-        {Number(page) > 1 && (
-          <a href={`/characters?page=${Number(page) - 1}`}>Previous</a>
-        )}
-        {' | '}
-        {Number(page) < data.info.pages && (
-          <a href={`/characters?page=${Number(page) + 1}`}>Next</a>
-        )}
-      </div>
+      <a href="/characters">← Back to characters</a>
     </main>
   );
 }
