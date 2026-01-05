@@ -1,9 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { headers } from 'next/headers';
-
 type Character = {
-  id: number;
   name: string;
   image: string;
   status: string;
@@ -11,43 +8,37 @@ type Character = {
   gender: string;
 };
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
+function getBaseUrl() {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'http://localhost:3000';
+}
 
-export default async function CharacterPage({ params }: Props) {
-  const p = await params;
-  const id = p.id;
-
-  const h = await headers();
-  const host = h.get('host');
-  const protocol =
-    process.env.NODE_ENV === 'development' ? 'http' : 'https';
+export default async function CharacterPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const baseUrl = getBaseUrl();
 
   const res = await fetch(
-    `${protocol}://${host}/api/characters/${id}`,
+    `${baseUrl}/api/characters/${params.id}`,
     { cache: 'no-store' }
   );
 
-  const character: Character = await res.json();
+  const c: Character = await res.json();
 
   return (
     <main style={{ padding: 20 }}>
-      <h1>{character.name}</h1>
-
-      <img
-        src={character.image}
-        alt={character.name}
-        style={{ width: 300, borderRadius: 12 }}
-      />
-
+      <h1>{c.name}</h1>
+      <img src={c.image} alt={c.name} width={300} />
       <ul>
-        <li>Status: {character.status}</li>
-        <li>Species: {character.species}</li>
-        <li>Gender: {character.gender}</li>
+        <li>Status: {c.status}</li>
+        <li>Species: {c.species}</li>
+        <li>Gender: {c.gender}</li>
       </ul>
-
-      <a href="/characters">← Back to characters</a>
+      <a href="/characters">← Back</a>
     </main>
   );
 }

@@ -1,54 +1,61 @@
 export const dynamic = 'force-dynamic';
 
-import { headers } from 'next/headers';
-
 type Character = {
   id: number;
   name: string;
   image: string;
-  status: string;
-  species: string;
-  gender: string;
 };
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
+function getBaseUrl() {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'http://localhost:3000';
+}
 
-export default async function CharacterPage({ params }: Props) {
-  const p = await params;
-  const id = p.id;
-
-  const h = await headers();
-  const host = h.get('host');
-
-  const protocol =
-    process.env.NODE_ENV === 'development' ? 'http' : 'https';
+export default async function CharactersPage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  const page = searchParams.page ?? '1';
+  const baseUrl = getBaseUrl();
 
   const res = await fetch(
-    `${protocol}://${host}/api/characters/${id}`,
+    `${baseUrl}/api/characters?page=${page}`,
     { cache: 'no-store' }
   );
 
-  const character: Character = await res.json();
+  const data = await res.json();
 
   return (
     <main style={{ padding: 20 }}>
-      <h1>{character.name}</h1>
+      <h1>Characters (Page {page})</h1>
 
-      <img
-        src={character.image}
-        alt={character.name}
-        style={{ width: 300, borderRadius: 12 }}
-      />
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
+        {data.results.map((c: Character) => (
+          <a
+            key={c.id}
+            href={`/characters/${c.id}`}
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            <div style={{ width: 150 }}>
+              <img src={c.image} alt={c.name} width={150} />
+              <p>{c.name}</p>
+            </div>
+          </a>
+        ))}
+      </div>
 
-      <ul>
-        <li>Status: {character.status}</li>
-        <li>Species: {character.species}</li>
-        <li>Gender: {character.gender}</li>
-      </ul>
-
-      <a href="/characters">← Back to characters</a>
+      <div style={{ marginTop: 20 }}>
+        {Number(page) > 1 && (
+          <a href={`/characters?page=${Number(page) - 1}`}>Previous</a>
+        )}
+        {' | '}
+        {Number(page) < data.info.pages && (
+          <a href={`/characters?page=${Number(page) + 1}`}>Next</a>
+        )}
+      </div>
     </main>
   );
 }
